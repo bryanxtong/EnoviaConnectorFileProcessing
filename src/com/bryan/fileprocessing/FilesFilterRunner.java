@@ -1,6 +1,5 @@
 package com.bryan.fileprocessing;
 
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
@@ -90,7 +89,26 @@ public class FilesFilterRunner {
 	}
 
 	/**
-	 * find all the files between startDate and endDate
+	 * see whether a file modified date time is after a time
+	 *
+	 * @param f
+	 * @param startTime
+	 * @return
+	 */
+	public boolean fileModifiedWithinTimeInterval(File f, Date startDate, Date endDate) {
+		long modifiedDate = f.lastModified();
+		Date fileModifiedDate = new Date(modifiedDate);
+		if (fileModifiedDate.compareTo(startDate) > 0 && fileModifiedDate.compareTo(endDate) <= 0) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * find all the files between startDate and endDate. First ensure the file
+	 * modified date is within the time interval, second, ensure the modified
+	 * attribute in xml content also matches.
 	 *
 	 * @param startDate
 	 * @param endDate
@@ -104,11 +122,9 @@ public class FilesFilterRunner {
 			public boolean accept(Path path) throws IOException {
 				File file = path.toFile();
 				if (!file.isDirectory() && file.getName().indexOf(FILTERED_FILE_TYPE) != -1) {
-					long modifiedDate = file.lastModified();
-					Date fileModifiedDate = new Date(modifiedDate);
-					if (fileModifiedDate.compareTo(startDate) > 0 && fileModifiedDate.compareTo(endDate) <= 0) {
-						return true;
-					}
+					boolean fileModifiedInTimeInterval = fileModifiedWithinTimeInterval(file, startDate, endDate);
+					boolean matched = match(file, startDate, endDate);
+					return fileModifiedInTimeInterval && matched;
 				}
 				return false;
 			}
@@ -118,7 +134,7 @@ public class FilesFilterRunner {
 			for (Path p : stream) {
 				String fileName = p.getFileName().toFile().getName();
 				if (MOVE_FILE_OR_NOT) {
-					count ++;
+					count++;
 					Files.move(Paths.get(sourceFolder, fileName), Paths.get(destFolder, fileName),
 							StandardCopyOption.REPLACE_EXISTING);
 				}
