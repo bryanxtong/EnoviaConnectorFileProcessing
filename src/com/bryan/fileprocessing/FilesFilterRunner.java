@@ -140,7 +140,7 @@ public class FilesFilterRunner {
 				count++;
 				System.out.println(fileName);
 			}
-			System.out.println("process count " + count);
+			System.out.println("matched file count " + count);
 			stream.close();
 		} catch (IOException e) {
 			e.printStackTrace();
