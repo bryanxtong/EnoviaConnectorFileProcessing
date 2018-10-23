@@ -134,10 +134,10 @@ public class FilesFilterRunner {
 			for (Path p : stream) {
 				String fileName = p.getFileName().toFile().getName();
 				if (MOVE_FILE_OR_NOT) {
-					count++;
 					Files.move(Paths.get(sourceFolder, fileName), Paths.get(destFolder, fileName),
 							StandardCopyOption.REPLACE_EXISTING);
 				}
+				count++;
 				System.out.println(fileName);
 			}
 			System.out.println("process count " + count);
@@ -150,9 +150,10 @@ public class FilesFilterRunner {
 
 	public static void main(String[] args) {
 		String strStartDate = "2018-03-02 00:00:00";
-		String strEndDate = "2018-03-28 16:07:30";
+		String strEndDate = "2018-10-28 16:07:32";
 		final String sourceFolder = "/var/user/csidev/Autonomy10/EnoviaConnector/EnoviaMP2013x/temp";
 		final String destFolder = "/var/user/csidev/Bryan/tempjava";
+
 
 		Date startDate = null;
 		Date endDate = null;
